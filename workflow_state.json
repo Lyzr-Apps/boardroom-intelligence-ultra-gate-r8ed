@@ -1,0 +1,19 @@
+{
+  "manager_agent_id": "699ff7d953661e46772f0951",
+  "sub_agent_ids": {
+    "attrition": "699ff7c17bf6b85220238412",
+    "planning": "699ff7c1d867eb2be8b21dd7",
+    "compensation": "699ff7c15dcf443c546ef877",
+    "orghealth": "699ff7c2c28fc74c6bf654d8"
+  },
+  "all_agent_ids": [
+    "699ff7c17bf6b85220238412",
+    "699ff7c1d867eb2be8b21dd7",
+    "699ff7c15dcf443c546ef877",
+    "699ff7c2c28fc74c6bf654d8",
+    "699ff7d953661e46772f0951"
+  ],
+  "file_output_agents": ["Workforce Intelligence Orchestrator"],
+  "voice_agents": [],
+  "image_agents": []
+}

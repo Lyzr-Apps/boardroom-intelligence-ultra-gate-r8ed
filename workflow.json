@@ -1,0 +1,34 @@
+{
+  "nodes": [
+    {"id": "input_node", "type": "Input", "label": "CHRO Strategic Query", "nodeCategory": "input"},
+    {"id": "manager_agent", "type": "Agent", "label": "Workforce Intelligence Orchestrator", "nodeCategory": "agent"},
+    {"id": "attrition_agent", "type": "Agent", "label": "Attrition Risk Prediction Agent", "nodeCategory": "agent"},
+    {"id": "planning_agent", "type": "Agent", "label": "Workforce Planning Agent", "nodeCategory": "agent"},
+    {"id": "compensation_agent", "type": "Agent", "label": "Compensation Benchmarking Agent", "nodeCategory": "agent"},
+    {"id": "orghealth_agent", "type": "Agent", "label": "Org Health Agent", "nodeCategory": "agent"},
+    {"id": "output_node", "type": "Output", "label": "Executive Intelligence Output", "nodeCategory": "end"}
+  ],
+  "edges": [
+    {"source": "input_node", "target": "manager_agent"},
+    {"source": "manager_agent", "target": "attrition_agent"},
+    {"source": "manager_agent", "target": "planning_agent"},
+    {"source": "manager_agent", "target": "compensation_agent"},
+    {"source": "manager_agent", "target": "orghealth_agent"},
+    {"source": "attrition_agent", "target": "output_node"},
+    {"source": "planning_agent", "target": "output_node"},
+    {"source": "compensation_agent", "target": "output_node"},
+    {"source": "orghealth_agent", "target": "output_node"}
+  ],
+  "agents": {
+    "manager": {
+      "id": "699ff7d953661e46772f0951",
+      "name": "Workforce Intelligence Orchestrator"
+    },
+    "sub_agents": [
+      {"id": "699ff7c17bf6b85220238412", "name": "Attrition Risk Prediction Agent"},
+      {"id": "699ff7c1d867eb2be8b21dd7", "name": "Workforce Planning Agent"},
+      {"id": "699ff7c15dcf443c546ef877", "name": "Compensation Benchmarking Agent"},
+      {"id": "699ff7c2c28fc74c6bf654d8", "name": "Org Health Agent"}
+    ]
+  }
+}

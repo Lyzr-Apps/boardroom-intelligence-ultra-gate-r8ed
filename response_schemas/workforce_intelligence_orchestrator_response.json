@@ -1,0 +1,78 @@
+{
+  "agent_name": "Workforce Intelligence Orchestrator",
+  "agent_id": "699ff7d953661e46772f0951",
+  "description": "Central brain that coordinates all strategic workforce analysis. Routes CHRO queries to specialized agents, aggregates predictions across attrition, planning, compensation, and org health into unified executive intelligence.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "workforce_health_score": "number",
+    "executive_summary": "string",
+    "attrition_risk_index": "number",
+    "workforce_cost_projection_usd": "number",
+    "pay_equity_score": "number",
+    "org_health_index": "number",
+    "hiring_pipeline_score": "number",
+    "top_strategic_risks": [
+      {
+        "risk": "string",
+        "severity": "string",
+        "impact_area": "string",
+        "recommended_action": "string"
+      }
+    ],
+    "top_recommended_actions": [
+      {
+        "action": "string",
+        "priority": "string",
+        "expected_impact": "string",
+        "timeline": "string",
+        "estimated_cost_usd": "number"
+      }
+    ],
+    "board_narrative": "string",
+    "detailed_attrition_analysis": "string",
+    "detailed_planning_analysis": "string",
+    "detailed_compensation_analysis": "string",
+    "detailed_org_health_analysis": "string"
+  },
+  "example_response": {
+    "workforce_health_score": 0,
+    "executive_summary": "sample string",
+    "attrition_risk_index": 0,
+    "workforce_cost_projection_usd": 0,
+    "pay_equity_score": 0,
+    "org_health_index": 0,
+    "hiring_pipeline_score": 0,
+    "top_strategic_risks": [
+      {
+        "risk": "sample string",
+        "severity": "sample string",
+        "impact_area": "sample string",
+        "recommended_action": "sample string"
+      }
+    ],
+    "top_recommended_actions": [
+      {
+        "action": "sample string",
+        "priority": "sample string",
+        "expected_impact": "sample string",
+        "timeline": "sample string",
+        "estimated_cost_usd": 0
+      }
+    ],
+    "board_narrative": "sample string",
+    "detailed_attrition_analysis": "sample string",
+    "detailed_planning_analysis": "sample string",
+    "detailed_compensation_analysis": "sample string",
+    "detailed_org_health_analysis": "sample string"
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      {
+        "file_url": "https://example.com/file.pdf"
+      }
+    ]
+  }
+}
