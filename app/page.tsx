@@ -251,10 +251,10 @@ function ScoreCircle({ score, label, size = 'md' }: { score: number | undefined;
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={`${sizeClass} relative`}>
+      <div className={`${sizeClass} relative glass-score-ring`}>
         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(35 15% 85%)" strokeWidth="8" />
-          <circle cx="50" cy="50" r="40" fill="none" stroke={s >= 70 ? 'hsl(142 71% 35%)' : s >= 50 ? 'hsl(43 75% 38%)' : 'hsl(0 84% 60%)'} strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={score !== undefined ? offset : circumference} className="transition-all duration-1000" />
+          <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="8" />
+          <circle cx="50" cy="50" r="40" fill="none" stroke={s >= 70 ? 'hsl(142 71% 35%)' : s >= 50 ? 'hsl(43 75% 38%)' : 'hsl(0 84% 60%)'} strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={score !== undefined ? offset : circumference} className="transition-all duration-1000" style={{ filter: 'drop-shadow(0 0 6px currentColor)' }} />
         </svg>
         <div className={`absolute inset-0 flex items-center justify-center ${textSize} font-serif font-bold text-foreground`}>
           {score !== undefined ? s : '--'}
@@ -267,7 +267,7 @@ function ScoreCircle({ score, label, size = 'md' }: { score: number | undefined;
 
 function MetricCard({ label, value, subtitle, icon, onClick }: { label: string; value: string | number; subtitle?: string; icon?: React.ReactNode; onClick?: () => void }) {
   return (
-    <div onClick={onClick} className={`bg-card rounded-lg shadow-md p-6 border border-border/30 hover:shadow-lg transition-all duration-300 ${onClick ? 'cursor-pointer hover:scale-[1.02]' : ''}`}>
+    <div onClick={onClick} className={`glass-card rounded-xl p-6 ${onClick ? 'glass-card-interactive' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-muted-foreground text-xs font-sans tracking-wider uppercase">{label}</p>
@@ -282,12 +282,12 @@ function MetricCard({ label, value, subtitle, icon, onClick }: { label: string; 
 
 function EmptyState({ message, subMessage, onAction, actionLabel }: { message: string; subMessage?: string; onAction?: () => void; actionLabel?: string }) {
   return (
-    <div className="text-center py-16 text-muted-foreground">
+    <div className="text-center py-16 text-muted-foreground glass-panel rounded-2xl mx-auto max-w-md">
       <FiBarChart2 className="mx-auto h-12 w-12 mb-4 opacity-40" />
       <p className="text-lg font-serif">{message}</p>
       {subMessage && <p className="text-sm mt-2">{subMessage}</p>}
       {onAction && actionLabel && (
-        <Button onClick={onAction} className="mt-4">
+        <Button onClick={onAction} className="mt-4 glass-btn-primary border-0">
           {actionLabel} <FiArrowRight className="ml-2" />
         </Button>
       )}
@@ -297,7 +297,7 @@ function EmptyState({ message, subMessage, onAction, actionLabel }: { message: s
 
 function InlineError({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 text-destructive">
+    <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-4 text-destructive backdrop-blur-sm">
       <div className="flex items-center gap-2">
         <FiX className="h-4 w-4" />
         <p className="font-medium text-sm">{message}</p>
@@ -311,7 +311,7 @@ function InlineError({ message, onRetry }: { message: string; onRetry?: () => vo
 
 function InlineStatus({ message, type }: { message: string; type: 'success' | 'info' | 'loading' }) {
   return (
-    <div className={`rounded-lg p-3 text-sm flex items-center gap-2 ${type === 'success' ? 'bg-green-500/10 text-green-700 border border-green-300/30' : type === 'loading' ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-secondary text-secondary-foreground border border-border/30'}`}>
+    <div className={`rounded-xl p-3 text-sm flex items-center gap-2 backdrop-blur-md ${type === 'success' ? 'bg-green-500/10 text-green-700 border border-green-300/30' : type === 'loading' ? 'bg-primary/10 text-primary border border-primary/20 glass-shimmer' : 'bg-secondary/50 text-secondary-foreground border border-border/30'}`}>
       {type === 'loading' && <FiLoader className="h-4 w-4 animate-spin" />}
       {type === 'success' && <FiCheck className="h-4 w-4" />}
       {message}
@@ -320,7 +320,7 @@ function InlineStatus({ message, type }: { message: string; type: 'success' | 'i
 }
 
 function SkeletonCard() {
-  return <div className="animate-pulse bg-muted rounded-lg h-32 border border-border/20" />
+  return <div className="glass-skeleton rounded-xl h-32" />
 }
 
 // ===================== AGENT INFO =====================
@@ -334,25 +334,23 @@ function AgentInfoPanel({ activeAgentId }: { activeAgentId: string | null }) {
     { id: ORG_HEALTH_AGENT_ID, name: 'Org Health', purpose: 'Engagement & burnout tracking' },
   ]
   return (
-    <Card className="border-border/30">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-sans flex items-center gap-2">
-          <FiActivity className="h-4 w-4 text-primary" />
-          Intelligence Agents
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
+    <div className="glass-panel rounded-xl p-3">
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <FiActivity className="h-4 w-4 text-primary" />
+        <span className="text-sm font-sans font-medium text-foreground">Intelligence Agents</span>
+      </div>
+      <div className="space-y-1.5">
         {agents.map((agent) => (
-          <div key={agent.id} className={`flex items-center gap-2 p-2 rounded-lg text-xs transition-colors ${activeAgentId === agent.id ? 'bg-primary/10 border border-primary/20' : ''}`}>
-            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${activeAgentId === agent.id ? 'bg-primary animate-pulse' : 'bg-muted-foreground/30'}`} />
+          <div key={agent.id} className={`flex items-center gap-2 p-2 rounded-lg text-xs transition-all duration-300 ${activeAgentId === agent.id ? 'glass-panel-strong border-primary/20' : 'hover:bg-white/20'}`}>
+            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${activeAgentId === agent.id ? 'bg-primary animate-pulse shadow-[0_0_8px_rgba(139,90,43,0.4)]' : 'bg-muted-foreground/30'}`} />
             <div className="min-w-0">
               <p className="font-medium text-foreground truncate">{agent.name}</p>
               <p className="text-muted-foreground truncate">{agent.purpose}</p>
             </div>
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
 
@@ -378,202 +376,176 @@ function DashboardSection({
   return (
     <div className="space-y-6">
       {/* Workforce Overview */}
-      <Card className="border-border/30 bg-card/80">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Total Headcount</p>
-              <p className="text-2xl font-serif font-bold text-foreground mt-1">{d ? '2,847' : '--'}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Attrition Rate</p>
-              <p className={`text-2xl font-serif font-bold mt-1 ${d ? 'text-orange-700' : 'text-muted-foreground'}`}>{d ? '18.4%' : '--%'}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Avg Engagement</p>
-              <p className={`text-2xl font-serif font-bold mt-1 ${d ? 'text-yellow-700' : 'text-muted-foreground'}`}>{d ? '71/100' : '--/100'}</p>
-            </div>
-            <div className="text-center">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Pay Competitiveness</p>
-              <p className={`text-2xl font-serif font-bold mt-1 ${d ? getScoreColor(d?.pay_equity_score) : 'text-muted-foreground'}`}>{d?.pay_equity_score !== undefined ? `${d.pay_equity_score}/100` : '--/100'}</p>
-            </div>
+      <div className="glass-panel-strong rounded-2xl p-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Total Headcount</p>
+            <p className="text-2xl font-serif font-bold text-foreground mt-1">{d ? '2,847' : '--'}</p>
           </div>
-        </CardContent>
-      </Card>
+          <div className="text-center">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Attrition Rate</p>
+            <p className={`text-2xl font-serif font-bold mt-1 ${d ? 'text-orange-700' : 'text-muted-foreground'}`}>{d ? '18.4%' : '--%'}</p>
+          </div>
+          <div className="text-center">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Avg Engagement</p>
+            <p className={`text-2xl font-serif font-bold mt-1 ${d ? 'text-yellow-700' : 'text-muted-foreground'}`}>{d ? '71/100' : '--/100'}</p>
+          </div>
+          <div className="text-center">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Pay Competitiveness</p>
+            <p className={`text-2xl font-serif font-bold mt-1 ${d ? getScoreColor(d?.pay_equity_score) : 'text-muted-foreground'}`}>{d?.pay_equity_score !== undefined ? `${d.pay_equity_score}/100` : '--/100'}</p>
+          </div>
+        </div>
+      </div>
 
       {/* Intelligence Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Attrition Risk Index */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('attrition')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Attrition Risk Index</p>
-              <FiAlertTriangle className="h-4 w-4 text-orange-600" />
-            </div>
-            <ScoreCircle score={d?.attrition_risk_index} label="" size="sm" />
-            <p className="text-sm text-muted-foreground mt-3 text-center">
-              {d?.attrition_risk_index !== undefined
-                ? (d.attrition_risk_index >= 50 ? 'Critical Risk' : d.attrition_risk_index >= 30 ? 'Elevated Risk' : 'Moderate Risk')
-                : 'Pending analysis'}
-            </p>
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('attrition')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Attrition Risk Index</p>
+            <FiAlertTriangle className="h-4 w-4 text-orange-600" />
+          </div>
+          <ScoreCircle score={d?.attrition_risk_index} label="" size="sm" />
+          <p className="text-sm text-muted-foreground mt-3 text-center">
+            {d?.attrition_risk_index !== undefined
+              ? (d.attrition_risk_index >= 50 ? 'Critical Risk' : d.attrition_risk_index >= 30 ? 'Elevated Risk' : 'Moderate Risk')
+              : 'Pending analysis'}
+          </p>
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
 
         {/* Workforce Cost */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('planning')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Workforce Cost Projection</p>
-              <FiDollarSign className="h-4 w-4 text-primary" />
-            </div>
-            <p className="text-3xl font-serif font-bold text-primary">{d?.workforce_cost_projection_usd !== undefined ? formatCurrency(d.workforce_cost_projection_usd) : '$--'}</p>
-            <p className="text-sm text-muted-foreground mt-2">Annual projection</p>
-            {d && <div className="flex items-center gap-1 mt-2 text-xs text-orange-600"><FiTrendingUp className="h-3 w-3" /> +4.2% vs last year</div>}
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('planning')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Workforce Cost Projection</p>
+            <FiDollarSign className="h-4 w-4 text-primary" />
+          </div>
+          <p className="text-3xl font-serif font-bold text-primary">{d?.workforce_cost_projection_usd !== undefined ? formatCurrency(d.workforce_cost_projection_usd) : '$--'}</p>
+          <p className="text-sm text-muted-foreground mt-2">Annual projection</p>
+          {d && <div className="flex items-center gap-1 mt-2 text-xs text-orange-600"><FiTrendingUp className="h-3 w-3" /> +4.2% vs last year</div>}
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
 
         {/* Hiring Pipeline */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('planning')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Hiring Pipeline Score</p>
-              <FiUsers className="h-4 w-4 text-primary" />
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('planning')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Hiring Pipeline Score</p>
+            <FiUsers className="h-4 w-4 text-primary" />
+          </div>
+          <div className="mt-2">
+            <div className="flex items-baseline gap-2">
+              <span className={`text-3xl font-serif font-bold ${getScoreColor(d?.hiring_pipeline_score)}`}>{d?.hiring_pipeline_score ?? '--'}%</span>
+              <span className="text-xs text-muted-foreground">sufficiency</span>
             </div>
-            <div className="mt-2">
-              <div className="flex items-baseline gap-2">
-                <span className={`text-3xl font-serif font-bold ${getScoreColor(d?.hiring_pipeline_score)}`}>{d?.hiring_pipeline_score ?? '--'}%</span>
-                <span className="text-xs text-muted-foreground">sufficiency</span>
-              </div>
-              <Progress value={d?.hiring_pipeline_score ?? 0} className="h-2 mt-3" />
-            </div>
-            <p className="text-sm text-muted-foreground mt-2">Pipeline fill rate</p>
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+            <Progress value={d?.hiring_pipeline_score ?? 0} className="h-2 mt-3" />
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">Pipeline fill rate</p>
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
 
         {/* Pay Equity */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('compensation')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Pay Equity Monitor</p>
-              <FiDollarSign className="h-4 w-4 text-accent" />
-            </div>
-            <ScoreCircle score={d?.pay_equity_score} label="" size="sm" />
-            <p className="text-sm text-muted-foreground mt-3 text-center">
-              {d ? 'Gender gap: 6.2%' : 'Pending analysis'}
-            </p>
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('compensation')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Pay Equity Monitor</p>
+            <FiDollarSign className="h-4 w-4 text-accent" />
+          </div>
+          <ScoreCircle score={d?.pay_equity_score} label="" size="sm" />
+          <p className="text-sm text-muted-foreground mt-3 text-center">
+            {d ? 'Gender gap: 6.2%' : 'Pending analysis'}
+          </p>
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
 
         {/* Org Health */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('orghealth')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Org Health Index</p>
-              <FiHeart className="h-4 w-4 text-red-500" />
-            </div>
-            <ScoreCircle score={d?.org_health_index} label="" size="sm" />
-            <p className="text-sm text-muted-foreground mt-3 text-center">
-              {d ? '3 burnout flags' : 'Pending analysis'}
-            </p>
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('orghealth')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Org Health Index</p>
+            <FiHeart className="h-4 w-4 text-red-500" />
+          </div>
+          <ScoreCircle score={d?.org_health_index} label="" size="sm" />
+          <p className="text-sm text-muted-foreground mt-3 text-center">
+            {d ? '3 burnout flags' : 'Pending analysis'}
+          </p>
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>View details</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
 
         {/* Strategic Risk */}
-        <Card className="border-border/30 hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => onNavigate('query')}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Strategic Risk Radar</p>
-              <FiShield className="h-4 w-4 text-red-600" />
-            </div>
-            <ScoreCircle score={d?.workforce_health_score} label="" size="sm" />
-            <p className="text-sm text-muted-foreground mt-3 text-center">
-              {d ? `${Array.isArray(d?.top_strategic_risks) ? d.top_strategic_risks.length : 0} active risks` : 'Pending analysis'}
-            </p>
-            <div className="flex items-center justify-center mt-2 text-xs text-primary">
-              <span>Explore</span> <FiChevronRight className="ml-1 h-3 w-3" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="glass-card glass-card-interactive rounded-xl p-6" onClick={() => onNavigate('query')}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground">Strategic Risk Radar</p>
+            <FiShield className="h-4 w-4 text-red-600" />
+          </div>
+          <ScoreCircle score={d?.workforce_health_score} label="" size="sm" />
+          <p className="text-sm text-muted-foreground mt-3 text-center">
+            {d ? `${Array.isArray(d?.top_strategic_risks) ? d.top_strategic_risks.length : 0} active risks` : 'Pending analysis'}
+          </p>
+          <div className="flex items-center justify-center mt-2 text-xs text-primary">
+            <span>Explore</span> <FiChevronRight className="ml-1 h-3 w-3" />
+          </div>
+        </div>
       </div>
 
       {/* Executive Summary */}
       {d?.executive_summary && (
-        <Card className="border-border/30">
-          <CardHeader>
-            <CardTitle className="font-serif text-lg">Executive Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {renderMarkdown(d.executive_summary)}
-          </CardContent>
-        </Card>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Executive Summary</h3>
+          {renderMarkdown(d.executive_summary)}
+        </div>
       )}
 
       {/* Strategic Risks Table */}
       {Array.isArray(d?.top_strategic_risks) && d.top_strategic_risks.length > 0 && (
-        <Card className="border-border/30">
-          <CardHeader>
-            <CardTitle className="font-serif text-lg">Top Strategic Risks</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {d.top_strategic_risks.map((risk, i) => (
-                <div key={i} className="flex items-start gap-4 p-3 bg-secondary/30 rounded-lg">
-                  <Badge className={`${getRiskColor(risk?.severity)} border text-xs flex-shrink-0`}>
-                    {risk?.severity ?? 'Unknown'}
-                  </Badge>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-foreground">{risk?.risk ?? ''}</p>
-                    <p className="text-xs text-muted-foreground mt-1">Impact: {risk?.impact_area ?? 'N/A'}</p>
-                    <p className="text-xs text-foreground/70 mt-1">{risk?.recommended_action ?? ''}</p>
-                  </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Top Strategic Risks</h3>
+          <div className="space-y-3">
+            {d.top_strategic_risks.map((risk, i) => (
+              <div key={i} className="flex items-start gap-4 p-3 glass-card rounded-xl">
+                <Badge className={`${getRiskColor(risk?.severity)} border text-xs flex-shrink-0 glass-badge`}>
+                  {risk?.severity ?? 'Unknown'}
+                </Badge>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm text-foreground">{risk?.risk ?? ''}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Impact: {risk?.impact_area ?? 'N/A'}</p>
+                  <p className="text-xs text-foreground/70 mt-1">{risk?.recommended_action ?? ''}</p>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Recommended Actions */}
       {Array.isArray(d?.top_recommended_actions) && d.top_recommended_actions.length > 0 && (
-        <Card className="border-border/30">
-          <CardHeader>
-            <CardTitle className="font-serif text-lg">Strategic Action Plan</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {d.top_recommended_actions.map((action, i) => (
-                <div key={i} className="p-4 bg-secondary/30 rounded-lg border border-border/20">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Badge className={`${getPriorityColor(action?.priority)} border text-xs`}>
-                      {action?.priority ?? 'Unknown'}
-                    </Badge>
-                    <span className="font-medium text-sm text-foreground">{action?.action ?? ''}</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-4 text-xs text-muted-foreground mt-2">
-                    <div><span className="font-medium">Impact:</span> {action?.expected_impact ?? 'N/A'}</div>
-                    <div><span className="font-medium">Timeline:</span> {action?.timeline ?? 'N/A'}</div>
-                    <div><span className="font-medium">Est. Cost:</span> {action?.estimated_cost_usd !== undefined ? formatCurrency(action.estimated_cost_usd) : 'N/A'}</div>
-                  </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Strategic Action Plan</h3>
+          <div className="space-y-3">
+            {d.top_recommended_actions.map((action, i) => (
+              <div key={i} className="p-4 glass-card rounded-xl">
+                <div className="flex items-center gap-3 mb-2">
+                  <Badge className={`${getPriorityColor(action?.priority)} border text-xs glass-badge`}>
+                    {action?.priority ?? 'Unknown'}
+                  </Badge>
+                  <span className="font-medium text-sm text-foreground">{action?.action ?? ''}</span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <div className="grid grid-cols-3 gap-4 text-xs text-muted-foreground mt-2">
+                  <div><span className="font-medium">Impact:</span> {action?.expected_impact ?? 'N/A'}</div>
+                  <div><span className="font-medium">Timeline:</span> {action?.timeline ?? 'N/A'}</div>
+                  <div><span className="font-medium">Est. Cost:</span> {action?.estimated_cost_usd !== undefined ? formatCurrency(action.estimated_cost_usd) : 'N/A'}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Generate Report CTA */}
@@ -581,7 +553,7 @@ function DashboardSection({
       {isGenerating && <InlineStatus message="Generating intelligence report... This may take a few minutes as sub-agents analyze your workforce data." type="loading" />}
 
       <div className="flex justify-center pt-4">
-        <Button onClick={onGenerate} disabled={isGenerating} size="lg" className="text-base px-8 py-6 shadow-lg">
+        <Button onClick={onGenerate} disabled={isGenerating} size="lg" className="text-base px-8 py-6 glass-btn-primary border-0 rounded-xl">
           {isGenerating ? (
             <><FiLoader className="mr-2 h-5 w-5 animate-spin" /> Generating Report...</>
           ) : (
@@ -635,56 +607,48 @@ function AttritionSection({ data, showSample, onNavigate }: { data: ReportData |
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* High-Risk Roles */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Top 10 High-Risk Roles</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-80">
-              <div className="space-y-2">
-                {highRiskRoles.map((role, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border/10">
-                    <div>
-                      <p className="font-medium text-sm text-foreground">{role.role}</p>
-                      <p className="text-xs text-muted-foreground">{role.dept}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`font-serif font-bold text-sm ${getScoreColor(100 - role.risk)}`}>{role.risk}%</span>
-                      <Badge className={`${getRiskColor(role.band)} border text-xs`}>{role.band}</Badge>
-                    </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Top 10 High-Risk Roles</h3>
+          <ScrollArea className="h-80">
+            <div className="space-y-2">
+              {highRiskRoles.map((role, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl glass-card">
+                  <div>
+                    <p className="font-medium text-sm text-foreground">{role.role}</p>
+                    <p className="text-xs text-muted-foreground">{role.dept}</p>
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </CardContent>
-        </Card>
+                  <div className="flex items-center gap-2">
+                    <span className={`font-serif font-bold text-sm ${getScoreColor(100 - role.risk)}`}>{role.risk}%</span>
+                    <Badge className={`${getRiskColor(role.band)} border text-xs glass-badge`}>{role.band}</Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
 
         {/* Departmental Risk Heatmap */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Departmental Risk Heatmap</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <div className="grid grid-cols-5 gap-1 text-xs">
-                <div className="font-medium text-muted-foreground p-2">Department</div>
-                <div className="font-medium text-center text-red-600 p-2">Critical</div>
-                <div className="font-medium text-center text-orange-600 p-2">High</div>
-                <div className="font-medium text-center text-yellow-600 p-2">Medium</div>
-                <div className="font-medium text-center text-green-600 p-2">Low</div>
-                {deptRisk.map((row, i) => (
-                  <React.Fragment key={i}>
-                    <div className="p-2 text-foreground font-medium truncate">{row.dept}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.critical)} font-bold`}>{row.critical}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.high)} font-bold`}>{row.high}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.medium)} font-bold`}>{row.medium}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.low)} font-bold`}>{row.low}</div>
-                  </React.Fragment>
-                ))}
-              </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Departmental Risk Heatmap</h3>
+          <div className="overflow-x-auto">
+            <div className="grid grid-cols-5 gap-1.5 text-xs">
+              <div className="font-medium text-muted-foreground p-2">Department</div>
+              <div className="font-medium text-center text-red-600 p-2">Critical</div>
+              <div className="font-medium text-center text-orange-600 p-2">High</div>
+              <div className="font-medium text-center text-yellow-600 p-2">Medium</div>
+              <div className="font-medium text-center text-green-600 p-2">Low</div>
+              {deptRisk.map((row, i) => (
+                <React.Fragment key={i}>
+                  <div className="p-2 text-foreground font-medium truncate">{row.dept}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.critical)} font-bold`}>{row.critical}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.high)} font-bold`}>{row.high}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.medium)} font-bold`}>{row.medium}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.low)} font-bold`}>{row.low}</div>
+                </React.Fragment>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Revenue at Risk */}
@@ -695,14 +659,10 @@ function AttritionSection({ data, showSample, onNavigate }: { data: ReportData |
       </div>
 
       {/* Detailed Analysis */}
-      <Card className="border-border/30">
-        <CardHeader>
-          <CardTitle className="font-serif text-lg">Detailed Attrition Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {renderMarkdown(d.detailed_attrition_analysis)}
-        </CardContent>
-      </Card>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Detailed Attrition Analysis</h3>
+        {renderMarkdown(d.detailed_attrition_analysis)}
+      </div>
     </div>
   )
 }
@@ -758,33 +718,27 @@ function PlanningSection({
       </div>
 
       {/* Headcount Forecast */}
-      <Card className="border-border/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="font-serif text-lg">Headcount Forecast</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            {forecastData.map((row, i) => (
-              <div key={i} className="p-4 bg-secondary/30 rounded-lg text-center">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-sans">{row.period}</p>
-                <p className="text-2xl font-serif font-bold text-primary mt-2">{row.projected.toLocaleString()}</p>
-                <div className="flex items-center justify-center gap-1 mt-1 text-sm">
-                  <FiArrowUp className="h-3 w-3 text-green-600" />
-                  <span className="text-green-700 font-medium">{row.net}</span>
-                </div>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Headcount Forecast</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {forecastData.map((row, i) => (
+            <div key={i} className="p-4 glass-card rounded-xl text-center">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-sans">{row.period}</p>
+              <p className="text-2xl font-serif font-bold text-primary mt-2">{row.projected.toLocaleString()}</p>
+              <div className="flex items-center justify-center gap-1 mt-1 text-sm">
+                <FiArrowUp className="h-3 w-3 text-green-600" />
+                <span className="text-green-700 font-medium">{row.net}</span>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Skill Demand */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Skill Demand Projections</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Skill Demand Projections</h3>
+          <div className="space-y-3">
             {skillDemand.map((skill, i) => (
               <div key={i} className="space-y-1">
                 <div className="flex items-center justify-between text-sm">
@@ -797,105 +751,95 @@ function PlanningSection({
                 <Progress value={skill.fill} className="h-2" />
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Pipeline Score */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Hiring Pipeline Sufficiency</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center py-4">
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Hiring Pipeline Sufficiency</h3>
+          <div className="flex flex-col items-center justify-center py-4">
             <ScoreCircle score={d?.hiring_pipeline_score} label="Pipeline Score" size="lg" />
             <div className="mt-4 grid grid-cols-2 gap-4 w-full text-center">
-              <div className="p-3 bg-red-500/10 rounded-lg">
+              <div className="p-3 bg-red-500/10 rounded-xl backdrop-blur-sm border border-red-300/20">
                 <p className="text-xs text-red-700 font-sans uppercase tracking-wider">Critical Gaps</p>
                 <p className="text-lg font-serif font-bold text-red-700 mt-1">AI/ML, Data Eng</p>
               </div>
-              <div className="p-3 bg-green-500/10 rounded-lg">
+              <div className="p-3 bg-green-500/10 rounded-xl backdrop-blur-sm border border-green-300/20">
                 <p className="text-xs text-green-700 font-sans uppercase tracking-wider">Strong Pipelines</p>
                 <p className="text-lg font-serif font-bold text-green-700 mt-1">Security, Cloud</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Scenario Simulator */}
-      <Card className="border-border/30 border-2 border-primary/20">
-        <CardHeader>
-          <CardTitle className="font-serif text-lg flex items-center gap-2">
-            <FiTarget className="h-5 w-5 text-accent" />
-            Scenario Simulator
-          </CardTitle>
-          <CardDescription>Adjust parameters to model workforce outcomes</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider">Attrition Rate Change %</Label>
-              <Input type="number" min={-20} max={20} value={attritionChange} onChange={(e) => setAttritionChange(Number(e.target.value))} className="font-mono" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider">Hiring Freeze</Label>
-              <div className="flex items-center gap-2 h-10">
-                <Switch checked={hiringFreeze} onCheckedChange={setHiringFreeze} />
-                <span className="text-sm text-muted-foreground">{hiringFreeze ? 'Active' : 'Inactive'}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider">Department</Label>
-              <Select value={department} onValueChange={setDepartment}>
-                <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Departments</SelectItem>
-                  <SelectItem value="engineering">Engineering</SelectItem>
-                  <SelectItem value="product">Product</SelectItem>
-                  <SelectItem value="sales">Sales</SelectItem>
-                  <SelectItem value="marketing">Marketing</SelectItem>
-                  <SelectItem value="customer-success">Customer Success</SelectItem>
-                  <SelectItem value="data-science">Data Science</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider">Time Horizon</Label>
-              <Select value={timeHorizon} onValueChange={setTimeHorizon}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="6">6 months</SelectItem>
-                  <SelectItem value="12">12 months</SelectItem>
-                  <SelectItem value="18">18 months</SelectItem>
-                </SelectContent>
-              </Select>
+      <div className="glass-panel-strong rounded-2xl p-6 border-2 border-primary/15">
+        <div className="flex items-center gap-2 mb-1">
+          <FiTarget className="h-5 w-5 text-accent" />
+          <h3 className="font-serif text-lg font-semibold">Scenario Simulator</h3>
+        </div>
+        <p className="text-sm text-muted-foreground mb-5">Adjust parameters to model workforce outcomes</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-wider">Attrition Rate Change %</Label>
+            <Input type="number" min={-20} max={20} value={attritionChange} onChange={(e) => setAttritionChange(Number(e.target.value))} className="font-mono glass-input rounded-xl" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-wider">Hiring Freeze</Label>
+            <div className="flex items-center gap-2 h-10">
+              <Switch checked={hiringFreeze} onCheckedChange={setHiringFreeze} />
+              <span className="text-sm text-muted-foreground">{hiringFreeze ? 'Active' : 'Inactive'}</span>
             </div>
           </div>
-          <div className="mt-4">
-            <Button onClick={() => onRunSimulation({ attritionChange, hiringFreeze, department, timeHorizon: parseInt(timeHorizon) })} disabled={isSimulating} className="w-full md:w-auto">
-              {isSimulating ? <><FiLoader className="mr-2 h-4 w-4 animate-spin" /> Running Simulation...</> : <><FiRefreshCw className="mr-2 h-4 w-4" /> Run Simulation</>}
-            </Button>
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-wider">Department</Label>
+            <Select value={department} onValueChange={setDepartment}>
+              <SelectTrigger className="glass-input rounded-xl"><SelectValue placeholder="Select department" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Departments</SelectItem>
+                <SelectItem value="engineering">Engineering</SelectItem>
+                <SelectItem value="product">Product</SelectItem>
+                <SelectItem value="sales">Sales</SelectItem>
+                <SelectItem value="marketing">Marketing</SelectItem>
+                <SelectItem value="customer-success">Customer Success</SelectItem>
+                <SelectItem value="data-science">Data Science</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-wider">Time Horizon</Label>
+            <Select value={timeHorizon} onValueChange={setTimeHorizon}>
+              <SelectTrigger className="glass-input rounded-xl"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="6">6 months</SelectItem>
+                <SelectItem value="12">12 months</SelectItem>
+                <SelectItem value="18">18 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="mt-4">
+          <Button onClick={() => onRunSimulation({ attritionChange, hiringFreeze, department, timeHorizon: parseInt(timeHorizon) })} disabled={isSimulating} className="w-full md:w-auto glass-btn-primary border-0 rounded-xl">
+            {isSimulating ? <><FiLoader className="mr-2 h-4 w-4 animate-spin" /> Running Simulation...</> : <><FiRefreshCw className="mr-2 h-4 w-4" /> Run Simulation</>}
+          </Button>
+        </div>
 
-          {simError && <div className="mt-4"><InlineError message={simError} /></div>}
+        {simError && <div className="mt-4"><InlineError message={simError} /></div>}
 
-          {scenarioResults && (
-            <div className="mt-6 p-4 bg-secondary/40 rounded-lg border border-border/20">
-              <h4 className="font-serif font-semibold text-sm mb-3">Simulation Results</h4>
-              {renderMarkdown(typeof scenarioResults === 'object' ? (scenarioResults?.executive_summary ?? scenarioResults?.detailed_planning_analysis ?? 'Simulation complete. Review the updated metrics above.') : String(scenarioResults))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {scenarioResults && (
+          <div className="mt-6 p-4 glass-card rounded-xl">
+            <h4 className="font-serif font-semibold text-sm mb-3">Simulation Results</h4>
+            {renderMarkdown(typeof scenarioResults === 'object' ? (scenarioResults?.executive_summary ?? scenarioResults?.detailed_planning_analysis ?? 'Simulation complete. Review the updated metrics above.') : String(scenarioResults))}
+          </div>
+        )}
+      </div>
 
       {/* Detailed Analysis */}
-      <Card className="border-border/30">
-        <CardHeader>
-          <CardTitle className="font-serif text-lg">Detailed Planning Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {renderMarkdown(d.detailed_planning_analysis)}
-        </CardContent>
-      </Card>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Detailed Planning Analysis</h3>
+        {renderMarkdown(d.detailed_planning_analysis)}
+      </div>
     </div>
   )
 }
@@ -939,44 +883,36 @@ function CompensationSection({ data, showSample, onNavigate }: { data: ReportDat
       </div>
 
       {/* Pay Competitiveness Score */}
-      <Card className="border-border/30 bg-card/80">
-        <CardContent className="p-8 flex flex-col items-center">
-          <ScoreCircle score={d?.pay_equity_score} label="Pay Competitiveness Score" size="lg" />
-        </CardContent>
-      </Card>
+      <div className="glass-panel-strong rounded-2xl p-8 flex flex-col items-center">
+        <ScoreCircle score={d?.pay_equity_score} label="Pay Competitiveness Score" size="lg" />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Compensation Risk Heatmap */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Compensation Risk by Role & Level</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <div className="grid grid-cols-4 gap-1 text-xs">
-                <div className="font-medium text-muted-foreground p-2">Role</div>
-                <div className="font-medium text-center text-muted-foreground p-2">IC Level</div>
-                <div className="font-medium text-center text-muted-foreground p-2">Manager</div>
-                <div className="font-medium text-center text-muted-foreground p-2">Director</div>
-                {riskHeatmap.map((row, i) => (
-                  <React.Fragment key={i}>
-                    <div className="p-2 text-foreground font-medium truncate">{row.role}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.ic)} font-bold`}>{row.ic}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.manager)} font-bold`}>{row.manager}</div>
-                    <div className={`p-2 text-center rounded ${getHeatmapColor(row.director)} font-bold`}>{row.director}</div>
-                  </React.Fragment>
-                ))}
-              </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Compensation Risk by Role & Level</h3>
+          <div className="overflow-x-auto">
+            <div className="grid grid-cols-4 gap-1.5 text-xs">
+              <div className="font-medium text-muted-foreground p-2">Role</div>
+              <div className="font-medium text-center text-muted-foreground p-2">IC Level</div>
+              <div className="font-medium text-center text-muted-foreground p-2">Manager</div>
+              <div className="font-medium text-center text-muted-foreground p-2">Director</div>
+              {riskHeatmap.map((row, i) => (
+                <React.Fragment key={i}>
+                  <div className="p-2 text-foreground font-medium truncate">{row.role}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.ic)} font-bold`}>{row.ic}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.manager)} font-bold`}>{row.manager}</div>
+                  <div className={`p-2 text-center rounded-lg glass-heatmap-cell ${getHeatmapColor(row.director)} font-bold`}>{row.director}</div>
+                </React.Fragment>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Equity Gap */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Equity Gap Analysis</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Equity Gap Analysis</h3>
+          <div className="space-y-4">
             {[
               { label: 'Gender Pay Gap', value: 6.2, target: 2 },
               { label: 'Ethnicity Pay Gap', value: 4.1, target: 2 },
@@ -988,15 +924,15 @@ function CompensationSection({ data, showSample, onNavigate }: { data: ReportDat
                   <span className="text-foreground font-medium">{item.label}</span>
                   <span className={`font-bold ${item.value > item.target ? 'text-red-700' : 'text-green-700'}`}>{item.value}%</span>
                 </div>
-                <div className="relative h-3 bg-secondary rounded-full overflow-hidden">
+                <div className="relative h-3 glass-progress overflow-hidden">
                   <div className="absolute h-full bg-red-400/70 rounded-full transition-all duration-500" style={{ width: `${Math.min(item.value * 10, 100)}%` }} />
                   <div className="absolute h-full border-r-2 border-green-600" style={{ left: `${item.target * 10}%` }} />
                 </div>
                 <p className="text-xs text-muted-foreground">Target: &lt;{item.target}%</p>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Cost to Correct */}
@@ -1008,53 +944,45 @@ function CompensationSection({ data, showSample, onNavigate }: { data: ReportDat
       </div>
 
       {/* Market Position Table */}
-      <Card className="border-border/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="font-serif text-lg">Market Position by Department</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border/30">
-                  <th className="text-left py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Department</th>
-                  <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Percentile</th>
-                  <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Gap</th>
-                  <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Status</th>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Market Position by Department</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/20">
+                <th className="text-left py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Department</th>
+                <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Percentile</th>
+                <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Gap</th>
+                <th className="text-center py-2 px-3 font-sans text-xs uppercase tracking-wider text-muted-foreground">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {deptComp.map((row, i) => (
+                <tr key={i} className="border-b border-white/10 hover:bg-white/10 transition-colors">
+                  <td className="py-2 px-3 font-medium text-foreground">{row.dept}</td>
+                  <td className="py-2 px-3 text-center">
+                    <span className={`font-serif font-bold ${row.percentile >= 50 ? 'text-green-700' : 'text-red-700'}`}>{row.percentile}th</span>
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    <span className={`font-mono ${row.gap >= 0 ? 'text-green-700' : 'text-red-700'}`}>{row.gap >= 0 ? '+' : ''}{row.gap}%</span>
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    <Badge className={`${row.gap < -5 ? 'bg-red-500/20 text-red-700 border-red-300' : row.gap >= 0 ? 'bg-green-500/20 text-green-700 border-green-300' : 'bg-yellow-500/20 text-yellow-700 border-yellow-300'} border text-xs glass-badge`}>
+                      {row.status}
+                    </Badge>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {deptComp.map((row, i) => (
-                  <tr key={i} className="border-b border-border/10">
-                    <td className="py-2 px-3 font-medium text-foreground">{row.dept}</td>
-                    <td className="py-2 px-3 text-center">
-                      <span className={`font-serif font-bold ${row.percentile >= 50 ? 'text-green-700' : 'text-red-700'}`}>{row.percentile}th</span>
-                    </td>
-                    <td className="py-2 px-3 text-center">
-                      <span className={`font-mono ${row.gap >= 0 ? 'text-green-700' : 'text-red-700'}`}>{row.gap >= 0 ? '+' : ''}{row.gap}%</span>
-                    </td>
-                    <td className="py-2 px-3 text-center">
-                      <Badge className={`${row.gap < -5 ? 'bg-red-500/20 text-red-700 border-red-300' : row.gap >= 0 ? 'bg-green-500/20 text-green-700 border-green-300' : 'bg-yellow-500/20 text-yellow-700 border-yellow-300'} border text-xs`}>
-                        {row.status}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Detailed Analysis */}
-      <Card className="border-border/30">
-        <CardHeader>
-          <CardTitle className="font-serif text-lg">Detailed Compensation Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {renderMarkdown(d.detailed_compensation_analysis)}
-        </CardContent>
-      </Card>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Detailed Compensation Analysis</h3>
+        {renderMarkdown(d.detailed_compensation_analysis)}
+      </div>
     </div>
   )
 }
@@ -1107,67 +1035,59 @@ function OrgHealthSection({ data, showSample, onNavigate }: { data: ReportData |
       </div>
 
       {/* Org Health Score */}
-      <Card className="border-border/30 bg-card/80">
-        <CardContent className="p-8">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <ScoreCircle score={d?.org_health_index} label="Org Health Index" size="lg" />
-            <div className="space-y-3 text-center md:text-left">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Overall Engagement:</span>
-                <span className="font-serif font-bold text-yellow-700">71/100</span>
-                <FiTrendingDown className="h-4 w-4 text-red-500" />
-                <span className="text-xs text-red-600">-4 from last quarter</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">eNPS:</span>
-                <span className="font-serif font-bold text-foreground">+18</span>
-                <span className="text-xs text-muted-foreground">(industry avg: +25)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Response Rate:</span>
-                <span className="font-serif font-bold text-green-700">84%</span>
-              </div>
+      <div className="glass-panel-strong rounded-2xl p-8">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+          <ScoreCircle score={d?.org_health_index} label="Org Health Index" size="lg" />
+          <div className="space-y-3 text-center md:text-left">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Overall Engagement:</span>
+              <span className="font-serif font-bold text-yellow-700">71/100</span>
+              <FiTrendingDown className="h-4 w-4 text-red-500" />
+              <span className="text-xs text-red-600">-4 from last quarter</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">eNPS:</span>
+              <span className="font-serif font-bold text-foreground">+18</span>
+              <span className="text-xs text-muted-foreground">(industry avg: +25)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Response Rate:</span>
+              <span className="font-serif font-bold text-green-700">84%</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Burnout Heatmap */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Burnout Indicators by Department</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {burnoutData.map((item, i) => (
-                <div key={i} className="flex items-center gap-3 p-2 rounded-lg bg-secondary/20">
-                  <div className="w-28 text-sm font-medium text-foreground truncate">{item.dept}</div>
-                  <div className="flex-1">
-                    <div className="relative h-6 bg-secondary rounded-full overflow-hidden">
-                      <div className={`absolute h-full rounded-full transition-all duration-700 ${item.score >= 70 ? 'bg-red-500/70' : item.score >= 50 ? 'bg-yellow-500/60' : 'bg-green-500/50'}`} style={{ width: `${item.score}%` }} />
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-foreground">{item.score}</span>
-                    </div>
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Burnout Indicators by Department</h3>
+          <div className="space-y-2">
+            {burnoutData.map((item, i) => (
+              <div key={i} className="flex items-center gap-3 p-2 rounded-xl glass-card">
+                <div className="w-28 text-sm font-medium text-foreground truncate">{item.dept}</div>
+                <div className="flex-1">
+                  <div className="relative h-6 glass-progress overflow-hidden">
+                    <div className={`absolute h-full rounded-full transition-all duration-700 ${item.score >= 70 ? 'bg-red-500/70' : item.score >= 50 ? 'bg-yellow-500/60' : 'bg-green-500/50'}`} style={{ width: `${item.score}%` }} />
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-foreground">{item.score}</span>
                   </div>
-                  <div className="flex items-center gap-1 w-16 text-xs">
-                    {item.trend === 'Rising' ? <FiTrendingUp className="h-3 w-3 text-red-500" /> : item.trend === 'Declining' ? <FiTrendingDown className="h-3 w-3 text-green-500" /> : <FiActivity className="h-3 w-3 text-yellow-500" />}
-                    <span className="text-muted-foreground">{item.trend}</span>
-                  </div>
-                  <Badge className={`${getRiskColor(item.flag)} border text-xs`}>{item.flag}</Badge>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <div className="flex items-center gap-1 w-16 text-xs">
+                  {item.trend === 'Rising' ? <FiTrendingUp className="h-3 w-3 text-red-500" /> : item.trend === 'Declining' ? <FiTrendingDown className="h-3 w-3 text-green-500" /> : <FiActivity className="h-3 w-3 text-yellow-500" />}
+                  <span className="text-muted-foreground">{item.trend}</span>
+                </div>
+                <Badge className={`${getRiskColor(item.flag)} border text-xs glass-badge`}>{item.flag}</Badge>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Engagement vs Attrition */}
-        <Card className="border-border/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-serif text-lg">Engagement vs Attrition Correlation</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="glass-panel rounded-2xl p-6">
+          <h3 className="font-serif text-lg font-semibold mb-4">Engagement vs Attrition Correlation</h3>
+          <div className="space-y-4">
             {engagementVsAttrition.map((item, i) => (
-              <div key={i} className={`p-4 rounded-lg ${item.color} border border-border/10`}>
+              <div key={i} className={`p-4 rounded-xl ${item.color} backdrop-blur-sm border border-white/15`}>
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-sm">{item.range}</span>
                   <span className="font-serif font-bold text-lg">{item.attritionMultiplier}</span>
@@ -1176,60 +1096,52 @@ function OrgHealthSection({ data, showSample, onNavigate }: { data: ReportData |
               </div>
             ))}
 
-            <Separator className="my-4" />
+            <Separator className="my-4 bg-white/20" />
 
             <div>
               <h4 className="font-serif font-semibold text-sm mb-3">Manager Risk Ranking</h4>
               <div className="space-y-2">
                 {managerRisk.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 bg-secondary/20 rounded-lg text-sm">
+                  <div key={i} className="flex items-center justify-between p-2 glass-card rounded-xl text-sm">
                     <div>
                       <p className="font-medium text-foreground">{item.type}</p>
                       <p className="text-xs text-muted-foreground">{item.detail}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-serif font-bold text-primary">{item.count}</span>
-                      <Badge className={`${getRiskColor(item.status === 'Healthy' ? 'low' : item.status === 'Critical' ? 'critical' : 'medium')} border text-xs`}>{item.status}</Badge>
+                      <Badge className={`${getRiskColor(item.status === 'Healthy' ? 'low' : item.status === 'Critical' ? 'critical' : 'medium')} border text-xs glass-badge`}>{item.status}</Badge>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Recommended Interventions */}
-      <Card className="border-border/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="font-serif text-lg">Recommended Interventions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {interventions.map((item, i) => (
-              <div key={i} className="p-4 bg-secondary/30 rounded-lg border border-border/10">
-                <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0 mt-0.5">{i + 1}</div>
-                  <div>
-                    <p className="font-medium text-sm text-foreground">{item.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
-                  </div>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Recommended Interventions</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {interventions.map((item, i) => (
+            <div key={i} className="p-4 glass-card rounded-xl">
+              <div className="flex items-start gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center text-xs font-bold text-primary flex-shrink-0 mt-0.5">{i + 1}</div>
+                <div>
+                  <p className="font-medium text-sm text-foreground">{item.title}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Detailed Analysis */}
-      <Card className="border-border/30">
-        <CardHeader>
-          <CardTitle className="font-serif text-lg">Detailed Org Health Analysis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {renderMarkdown(d.detailed_org_health_analysis)}
-        </CardContent>
-      </Card>
+      <div className="glass-panel rounded-2xl p-6">
+        <h3 className="font-serif text-lg font-semibold mb-4">Detailed Org Health Analysis</h3>
+        {renderMarkdown(d.detailed_org_health_analysis)}
+      </div>
     </div>
   )
 }
@@ -1282,7 +1194,7 @@ function QuerySection({
         <div className="lg:col-span-1 space-y-2">
           <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-3">Suggested Queries</p>
           {suggestedQueries.map((q, i) => (
-            <button key={i} onClick={() => { setInputValue(q); onSendMessage(q) }} disabled={isQuerying} className="w-full text-left p-3 text-sm bg-secondary/40 hover:bg-secondary/70 rounded-lg border border-border/10 transition-colors text-foreground disabled:opacity-50">
+            <button key={i} onClick={() => { setInputValue(q); onSendMessage(q) }} disabled={isQuerying} className="w-full text-left p-3 text-sm glass-card glass-card-interactive rounded-xl transition-all text-foreground disabled:opacity-50">
               {q}
             </button>
           ))}
@@ -1290,8 +1202,8 @@ function QuerySection({
 
         {/* Chat Area */}
         <div className="lg:col-span-3 flex flex-col">
-          <Card className="border-border/30 flex-1 flex flex-col">
-            <CardContent className="flex-1 p-4 flex flex-col">
+          <div className="glass-panel rounded-2xl flex-1 flex flex-col">
+            <div className="flex-1 p-4 flex flex-col">
               {/* Messages */}
               <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 mb-4 min-h-[300px]">
                 {chatMessages.length === 0 && (
@@ -1305,7 +1217,7 @@ function QuerySection({
                 )}
                 {chatMessages.map((msg, i) => (
                   <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[80%] rounded-lg p-4 ${msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-foreground border border-border/20'}`}>
+                    <div className={`max-w-[80%] rounded-2xl p-4 ${msg.role === 'user' ? 'glass-chat-user text-primary-foreground' : 'glass-chat-assistant text-foreground'}`}>
                       {msg.role === 'assistant' ? renderMarkdown(msg.content) : <p className="text-sm">{msg.content}</p>}
                       <p className={`text-xs mt-2 ${msg.role === 'user' ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>{msg.timestamp}</p>
                     </div>
@@ -1313,8 +1225,8 @@ function QuerySection({
                 ))}
                 {isQuerying && (
                   <div className="flex justify-start">
-                    <div className="bg-secondary/50 rounded-lg p-4 border border-border/20">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="glass-chat-assistant rounded-2xl p-4">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground glass-shimmer">
                         <FiLoader className="h-4 w-4 animate-spin" />
                         Analyzing workforce data...
                       </div>
@@ -1327,13 +1239,13 @@ function QuerySection({
 
               {/* Input */}
               <div className="flex gap-2">
-                <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Ask a strategic workforce question..." className="flex-1" onKeyDown={(e) => { if (e.key === 'Enter') handleSend() }} disabled={isQuerying} />
-                <Button onClick={handleSend} disabled={!inputValue.trim() || isQuerying} size="icon">
+                <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="Ask a strategic workforce question..." className="flex-1 glass-input rounded-xl" onKeyDown={(e) => { if (e.key === 'Enter') handleSend() }} disabled={isQuerying} />
+                <Button onClick={handleSend} disabled={!inputValue.trim() || isQuerying} size="icon" className="glass-btn-primary border-0 rounded-xl">
                   <FiSend className="h-4 w-4" />
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1525,11 +1437,16 @@ export default function Page() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-background text-foreground flex">
+      <div className="min-h-screen glass-bg-animated text-foreground flex relative">
+        {/* Floating Glass Orbs */}
+        <div className="glass-orb glass-orb-1" />
+        <div className="glass-orb glass-orb-2" />
+        <div className="glass-orb glass-orb-3" />
+
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'w-72' : 'w-0 overflow-hidden'} flex-shrink-0 bg-card border-r border-border/20 flex flex-col transition-all duration-300`}>
+        <aside className={`${sidebarOpen ? 'w-72' : 'w-0 overflow-hidden'} flex-shrink-0 glass-sidebar flex flex-col transition-all duration-300 z-10`}>
           {/* Logo / Brand */}
-          <div className="p-6 border-b border-border/20">
+          <div className="p-6 border-b border-white/20">
             <h1 className="font-serif text-lg font-bold text-primary tracking-wide">CHRO Intelligence</h1>
             <p className="text-xs text-muted-foreground mt-1 font-sans">Workforce Analytics Platform</p>
           </div>
@@ -1537,7 +1454,7 @@ export default function Page() {
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
             {navItems.map((item) => (
-              <button key={item.key} onClick={() => setActiveSection(item.key)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-sans transition-all duration-200 ${activeSection === item.key ? 'bg-primary text-primary-foreground shadow-md' : 'text-foreground/80 hover:bg-secondary/60 hover:text-foreground'}`}>
+              <button key={item.key} onClick={() => setActiveSection(item.key)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-sans glass-nav-item ${activeSection === item.key ? 'glass-nav-active text-primary-foreground' : 'text-foreground/80 hover:text-foreground'}`}>
                 {item.icon}
                 <span className="font-medium">{item.label}</span>
               </button>
@@ -1545,7 +1462,7 @@ export default function Page() {
           </nav>
 
           {/* Sample Data Toggle */}
-          <div className="p-4 border-t border-border/20">
+          <div className="p-4 border-t border-white/20">
             <div className="flex items-center justify-between">
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Sample Data</Label>
               <Switch checked={showSample} onCheckedChange={setShowSample} />
@@ -1553,17 +1470,17 @@ export default function Page() {
           </div>
 
           {/* Agent Info */}
-          <div className="p-4 border-t border-border/20">
+          <div className="p-4 border-t border-white/20">
             <AgentInfoPanel activeAgentId={activeAgentId} />
           </div>
         </aside>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 z-10">
           {/* Header */}
-          <header className="h-16 bg-card border-b border-border/20 flex items-center justify-between px-6 flex-shrink-0">
+          <header className="h-16 glass-header flex items-center justify-between px-6 flex-shrink-0">
             <div className="flex items-center gap-4">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-secondary/60 rounded-lg transition-colors text-foreground">
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-white/30 rounded-xl transition-all text-foreground backdrop-blur-sm">
                 <FiGrid className="h-5 w-5" />
               </button>
               <div>
@@ -1574,7 +1491,7 @@ export default function Page() {
               {exportStatus && (
                 <span className="text-xs text-muted-foreground font-sans">{exportStatus}</span>
               )}
-              <Button onClick={handleExportReport} disabled={isExporting} variant="outline" size="sm" className="flex items-center gap-2">
+              <Button onClick={handleExportReport} disabled={isExporting} variant="outline" size="sm" className="flex items-center gap-2 glass-card rounded-xl border-white/30">
                 {isExporting ? <FiLoader className="h-4 w-4 animate-spin" /> : <FiDownload className="h-4 w-4" />}
                 <span className="hidden md:inline">Export Board Report</span>
               </Button>
