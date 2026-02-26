@@ -15,8 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import {
   FiGrid, FiAlertTriangle, FiUsers, FiDollarSign, FiHeart, FiMessageSquare,
   FiDownload, FiSend, FiRefreshCw, FiChevronRight, FiTrendingUp, FiTrendingDown,
-  FiBarChart2, FiActivity, FiShield, FiTarget,
-  FiArrowRight, FiArrowUp, FiArrowDown, FiLoader, FiCheck, FiX
+  FiBarChart2, FiActivity, FiShield, FiTarget, FiClock, FiZap, FiMapPin,
+  FiArrowRight, FiArrowUp, FiArrowDown, FiLoader, FiCheck, FiX, FiPercent
 } from 'react-icons/fi'
 
 // ===================== CONSTANTS =====================
@@ -495,57 +495,334 @@ function DashboardSection({
         </div>
       </div>
 
-      {/* Executive Summary */}
-      {d?.executive_summary && (
-        <div className="glass-panel rounded-2xl p-6">
-          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Executive Summary</h3>
-          {renderMarkdown(d.executive_summary)}
-        </div>
-      )}
-
-      {/* Strategic Risks Table */}
-      {Array.isArray(d?.top_strategic_risks) && d.top_strategic_risks.length > 0 && (
-        <div className="glass-panel rounded-2xl p-6">
-          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Top Strategic Risks</h3>
-          <div className="space-y-3">
-            {d.top_strategic_risks.map((risk, i) => (
-              <div key={i} className="flex items-start gap-4 p-3 glass-card rounded-xl">
-                <Badge className={`${getRiskColor(risk?.severity)} border text-xs flex-shrink-0 glass-badge`}>
-                  {risk?.severity ?? 'Unknown'}
-                </Badge>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-foreground">{risk?.risk ?? ''}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Impact: {risk?.impact_area ?? 'N/A'}</p>
-                  <p className="text-xs text-foreground/70 mt-1">{risk?.recommended_action ?? ''}</p>
+      {/* ===== INSIGHTS SECTION ===== */}
+      {d && (
+        <>
+          {/* Financial Impact Summary */}
+          <div className="glass-panel rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-5">
+              <FiDollarSign className="h-5 w-5 text-accent" />
+              <h3 className="font-serif text-lg font-semibold text-foreground">Financial Impact Summary</h3>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="glass-card rounded-xl p-4 text-center">
+                <p className="text-xs font-sans uppercase tracking-wider text-muted-foreground">Annual Workforce Cost</p>
+                <p className="text-2xl font-serif font-bold text-primary mt-2">$142.5M</p>
+                <div className="flex items-center justify-center gap-1 mt-1 text-xs text-orange-600">
+                  <FiTrendingUp className="h-3 w-3" /> +4.2% YoY
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Recommended Actions */}
-      {Array.isArray(d?.top_recommended_actions) && d.top_recommended_actions.length > 0 && (
-        <div className="glass-panel rounded-2xl p-6">
-          <h3 className="font-serif text-lg font-semibold mb-4 text-foreground">Strategic Action Plan</h3>
-          <div className="space-y-3">
-            {d.top_recommended_actions.map((action, i) => (
-              <div key={i} className="p-4 glass-card rounded-xl">
-                <div className="flex items-center gap-3 mb-2">
-                  <Badge className={`${getPriorityColor(action?.priority)} border text-xs glass-badge`}>
-                    {action?.priority ?? 'Unknown'}
-                  </Badge>
-                  <span className="font-medium text-sm text-foreground">{action?.action ?? ''}</span>
-                </div>
-                <div className="grid grid-cols-3 gap-4 text-xs text-muted-foreground mt-2">
-                  <div><span className="font-medium">Impact:</span> {action?.expected_impact ?? 'N/A'}</div>
-                  <div><span className="font-medium">Timeline:</span> {action?.timeline ?? 'N/A'}</div>
-                  <div><span className="font-medium">Est. Cost:</span> {action?.estimated_cost_usd !== undefined ? formatCurrency(action.estimated_cost_usd) : 'N/A'}</div>
+              <div className="glass-card rounded-xl p-4 text-center">
+                <p className="text-xs font-sans uppercase tracking-wider text-muted-foreground">Revenue at Risk</p>
+                <p className="text-2xl font-serif font-bold text-red-700 mt-2">$18.7M</p>
+                <div className="flex items-center justify-center gap-1 mt-1 text-xs text-red-600">
+                  <FiAlertTriangle className="h-3 w-3" /> From attrition
                 </div>
               </div>
-            ))}
+              <div className="glass-card rounded-xl p-4 text-center">
+                <p className="text-xs font-sans uppercase tracking-wider text-muted-foreground">Pay Correction Needed</p>
+                <p className="text-2xl font-serif font-bold text-orange-700 mt-2">$4.2M</p>
+                <div className="flex items-center justify-center gap-1 mt-1 text-xs text-muted-foreground">
+                  <FiTarget className="h-3 w-3" /> One-time fix
+                </div>
+              </div>
+              <div className="glass-card rounded-xl p-4 text-center">
+                <p className="text-xs font-sans uppercase tracking-wider text-muted-foreground">Projected ROI</p>
+                <p className="text-2xl font-serif font-bold text-green-700 mt-2">2.1x</p>
+                <div className="flex items-center justify-center gap-1 mt-1 text-xs text-green-600">
+                  <FiTrendingUp className="h-3 w-3" /> 18-month horizon
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+
+          {/* Department Health Comparison */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiBarChart2 className="h-5 w-5 text-primary" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Department Attrition Risk</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { dept: 'Engineering', rate: 24.3, band: 'Critical', color: 'bg-red-500/70' },
+                  { dept: 'Product', rate: 19.8, band: 'High', color: 'bg-orange-500/60' },
+                  { dept: 'Customer Success', rate: 17.5, band: 'High', color: 'bg-orange-500/60' },
+                  { dept: 'Data Science', rate: 16.2, band: 'Medium', color: 'bg-yellow-500/60' },
+                  { dept: 'Sales', rate: 11.0, band: 'Low', color: 'bg-green-500/50' },
+                  { dept: 'Marketing', rate: 9.5, band: 'Low', color: 'bg-green-500/50' },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-foreground font-medium">{item.dept}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-serif font-bold ${item.rate >= 20 ? 'text-red-700' : item.rate >= 15 ? 'text-orange-700' : 'text-green-700'}`}>{item.rate}%</span>
+                        <Badge className={`${getRiskColor(item.band)} border text-xs glass-badge`}>{item.band}</Badge>
+                      </div>
+                    </div>
+                    <div className="relative h-2.5 glass-progress overflow-hidden">
+                      <div className={`absolute h-full rounded-full transition-all duration-700 ${item.color}`} style={{ width: `${Math.min(item.rate * 3.5, 100)}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiPercent className="h-5 w-5 text-accent" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Compensation vs Market</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { dept: 'Engineering', percentile: 45, gap: -10 },
+                  { dept: 'Customer Success', percentile: 42, gap: -12 },
+                  { dept: 'Data Science', percentile: 48, gap: -7 },
+                  { dept: 'Product', percentile: 52, gap: -3 },
+                  { dept: 'Sales', percentile: 58, gap: 3 },
+                  { dept: 'Design', percentile: 55, gap: 2 },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-foreground font-medium">{item.dept}</span>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-mono text-xs font-bold ${item.gap >= 0 ? 'text-green-700' : 'text-red-700'}`}>{item.gap >= 0 ? '+' : ''}{item.gap}%</span>
+                        <span className={`font-serif font-bold text-sm ${item.percentile >= 50 ? 'text-green-700' : 'text-red-700'}`}>{item.percentile}th</span>
+                      </div>
+                    </div>
+                    <div className="relative h-2.5 glass-progress overflow-hidden">
+                      <div className={`absolute h-full rounded-full transition-all duration-700 ${item.percentile >= 50 ? 'bg-green-500/60' : item.percentile >= 45 ? 'bg-yellow-500/60' : 'bg-red-500/60'}`} style={{ width: `${item.percentile}%` }} />
+                      <div className="absolute h-full border-r-2 border-foreground/30" style={{ left: '50%' }} title="Market median" />
+                    </div>
+                  </div>
+                ))}
+                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-2"><span className="w-3 h-0.5 bg-foreground/30 inline-block" /> 50th percentile (market median)</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Engagement & Burnout Snapshot + Hiring Pipeline */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Burnout Snapshot */}
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiActivity className="h-5 w-5 text-red-500" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Burnout Snapshot</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { dept: 'Product', score: 78, trend: 'up' },
+                  { dept: 'Engineering', score: 72, trend: 'flat' },
+                  { dept: 'Customer Success', score: 69, trend: 'up' },
+                  { dept: 'Sales', score: 55, trend: 'flat' },
+                  { dept: 'Design', score: 52, trend: 'down' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 p-2 glass-card rounded-xl">
+                    <div className="w-20 text-xs font-medium text-foreground truncate">{item.dept}</div>
+                    <div className="flex-1">
+                      <div className="relative h-5 glass-progress overflow-hidden">
+                        <div className={`absolute h-full rounded-full transition-all duration-700 ${item.score >= 70 ? 'bg-red-500/70' : item.score >= 50 ? 'bg-yellow-500/60' : 'bg-green-500/50'}`} style={{ width: `${item.score}%` }} />
+                        <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">{item.score}</span>
+                      </div>
+                    </div>
+                    {item.trend === 'up' ? <FiTrendingUp className="h-3.5 w-3.5 text-red-500 flex-shrink-0" /> : item.trend === 'down' ? <FiTrendingDown className="h-3.5 w-3.5 text-green-500 flex-shrink-0" /> : <FiActivity className="h-3.5 w-3.5 text-yellow-500 flex-shrink-0" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Hiring Pipeline Gaps */}
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiUsers className="h-5 w-5 text-primary" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Hiring Pipeline</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { skill: 'AI/ML Eng.', needed: 45, filled: 12, pct: 27 },
+                  { skill: 'Data Eng.', needed: 15, filled: 4, pct: 27 },
+                  { skill: 'Product Mgmt', needed: 18, filled: 10, pct: 56 },
+                  { skill: 'Cloud Infra', needed: 22, filled: 15, pct: 68 },
+                  { skill: 'Security Eng.', needed: 8, filled: 6, pct: 75 },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-foreground font-medium">{item.skill}</span>
+                      <span className={`font-bold ${item.pct >= 60 ? 'text-green-700' : item.pct >= 40 ? 'text-yellow-700' : 'text-red-700'}`}>{item.filled}/{item.needed}</span>
+                    </div>
+                    <Progress value={item.pct} className="h-2" />
+                  </div>
+                ))}
+                <div className="pt-2 border-t border-white/20">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Avg. Time-to-Fill</span>
+                    <span className="font-serif font-bold text-orange-700">62 days</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs mt-1">
+                    <span className="text-muted-foreground">Target</span>
+                    <span className="font-serif font-bold text-green-700">45 days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Equity Gaps */}
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiShield className="h-5 w-5 text-accent" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Equity & DEI</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { label: 'Gender Pay Gap', value: 6.2, target: 2 },
+                  { label: 'Ethnicity Pay Gap', value: 4.1, target: 2 },
+                  { label: 'Tenure-Adjusted', value: 3.8, target: 2 },
+                  { label: 'Role-Level Adjusted', value: 2.9, target: 2 },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-foreground font-medium">{item.label}</span>
+                      <span className={`font-bold ${item.value > item.target ? 'text-red-700' : 'text-green-700'}`}>{item.value}%</span>
+                    </div>
+                    <div className="relative h-2 glass-progress overflow-hidden">
+                      <div className="absolute h-full bg-red-400/70 rounded-full transition-all duration-500" style={{ width: `${Math.min(item.value * 10, 100)}%` }} />
+                      <div className="absolute h-full border-r-2 border-green-600" style={{ left: `${item.target * 10}%` }} />
+                    </div>
+                  </div>
+                ))}
+                <div className="pt-2 border-t border-white/20 text-xs text-muted-foreground">
+                  <p className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-600 inline-block" /> Target: &lt;2% gap</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Engagement vs Attrition Correlation + Exit Drivers */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Engagement-Attrition Correlation */}
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiZap className="h-5 w-5 text-primary" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Engagement-Attrition Link</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { range: 'Engagement < 60', multiplier: '2.4x', teams: 4, color: 'bg-red-500/15 border-red-300/30', textColor: 'text-red-700', barWidth: 96 },
+                  { range: 'Engagement 60-75', multiplier: '1.2x', teams: 8, color: 'bg-yellow-500/15 border-yellow-300/30', textColor: 'text-yellow-700', barWidth: 48 },
+                  { range: 'Engagement > 75', multiplier: '0.7x', teams: 12, color: 'bg-green-500/15 border-green-300/30', textColor: 'text-green-700', barWidth: 28 },
+                ].map((item, i) => (
+                  <div key={i} className={`rounded-xl p-4 ${item.color} border backdrop-blur-sm`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-foreground">{item.range}</span>
+                      <span className={`font-serif font-bold text-xl ${item.textColor}`}>{item.multiplier}</span>
+                    </div>
+                    <div className="relative h-2 glass-progress overflow-hidden">
+                      <div className={`absolute h-full rounded-full ${item.textColor === 'text-red-700' ? 'bg-red-500/60' : item.textColor === 'text-yellow-700' ? 'bg-yellow-500/60' : 'bg-green-500/50'}`} style={{ width: `${item.barWidth}%` }} />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">{item.teams} teams in this range</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Exit Interview Drivers */}
+            <div className="glass-panel rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <FiMapPin className="h-5 w-5 text-red-500" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Exit Interview Drivers</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { driver: 'Compensation', pct: 42, icon: <FiDollarSign className="h-4 w-4" /> },
+                  { driver: 'Career Growth', pct: 28, icon: <FiTrendingUp className="h-4 w-4" /> },
+                  { driver: 'Work-Life Balance', pct: 19, icon: <FiClock className="h-4 w-4" /> },
+                  { driver: 'Management', pct: 7, icon: <FiUsers className="h-4 w-4" /> },
+                  { driver: 'Other', pct: 4, icon: <FiGrid className="h-4 w-4" /> },
+                ].map((item, i) => (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2 text-foreground">
+                        <span className="text-muted-foreground">{item.icon}</span>
+                        <span className="font-medium">{item.driver}</span>
+                      </div>
+                      <span className="font-serif font-bold text-foreground">{item.pct}%</span>
+                    </div>
+                    <div className="relative h-3 glass-progress overflow-hidden">
+                      <div className="absolute h-full bg-primary/50 rounded-full transition-all duration-700" style={{ width: `${item.pct * 2}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Strategic Risks + Actions in Compact Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Strategic Risks */}
+            {Array.isArray(d?.top_strategic_risks) && d.top_strategic_risks.length > 0 && (
+              <div className="glass-panel rounded-2xl p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <FiAlertTriangle className="h-5 w-5 text-red-600" />
+                  <h3 className="font-serif text-lg font-semibold text-foreground">Top Strategic Risks</h3>
+                </div>
+                <div className="space-y-2.5">
+                  {d.top_strategic_risks.map((risk, i) => (
+                    <div key={i} className="flex items-start gap-3 p-3 glass-card rounded-xl">
+                      <div className="flex items-center justify-center w-7 h-7 rounded-full bg-red-500/15 text-red-700 text-xs font-bold flex-shrink-0 mt-0.5 backdrop-blur-sm">{i + 1}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-medium text-sm text-foreground truncate">{risk?.risk ?? ''}</p>
+                          <Badge className={`${getRiskColor(risk?.severity)} border text-xs glass-badge flex-shrink-0`}>
+                            {risk?.severity ?? 'Unknown'}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{risk?.impact_area ?? 'N/A'}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Top Actions */}
+            {Array.isArray(d?.top_recommended_actions) && d.top_recommended_actions.length > 0 && (
+              <div className="glass-panel rounded-2xl p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <FiTarget className="h-5 w-5 text-accent" />
+                  <h3 className="font-serif text-lg font-semibold text-foreground">Priority Actions</h3>
+                </div>
+                <div className="space-y-2.5">
+                  {d.top_recommended_actions.map((action, i) => (
+                    <div key={i} className="p-3 glass-card rounded-xl">
+                      <div className="flex items-center gap-3 mb-1.5">
+                        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary text-xs font-bold flex-shrink-0 backdrop-blur-sm">{i + 1}</div>
+                        <span className="font-medium text-sm text-foreground flex-1">{action?.action ?? ''}</span>
+                        <Badge className={`${getPriorityColor(action?.priority)} border text-xs glass-badge flex-shrink-0`}>
+                          {action?.priority ?? ''}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground ml-10">
+                        <span className="flex items-center gap-1"><FiClock className="h-3 w-3" /> {action?.timeline ?? 'N/A'}</span>
+                        <span className="flex items-center gap-1"><FiDollarSign className="h-3 w-3" /> {action?.estimated_cost_usd !== undefined ? formatCurrency(action.estimated_cost_usd) : 'N/A'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Board Narrative Summary */}
+          {d?.board_narrative && (
+            <div className="glass-panel-strong rounded-2xl p-6 border-2 border-primary/10">
+              <div className="flex items-center gap-2 mb-4">
+                <FiBarChart2 className="h-5 w-5 text-primary" />
+                <h3 className="font-serif text-lg font-semibold text-foreground">Board Report Narrative</h3>
+              </div>
+              {renderMarkdown(d.board_narrative)}
+            </div>
+          )}
+        </>
       )}
 
       {/* Generate Report CTA */}
