@@ -1461,14 +1461,6 @@ export default function Page() {
             ))}
           </nav>
 
-          {/* Sample Data Toggle */}
-          <div className="p-4 border-t border-white/20">
-            <div className="flex items-center justify-between">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Sample Data</Label>
-              <Switch checked={showSample} onCheckedChange={setShowSample} />
-            </div>
-          </div>
-
           {/* Agent Info */}
           <div className="p-4 border-t border-white/20">
             <AgentInfoPanel activeAgentId={activeAgentId} />
@@ -1487,10 +1479,14 @@ export default function Page() {
                 <h2 className="font-serif text-xl font-semibold text-foreground tracking-wide">CHRO Intelligence Console</h2>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               {exportStatus && (
                 <span className="text-xs text-muted-foreground font-sans">{exportStatus}</span>
               )}
+              <div className="flex items-center gap-2 glass-card rounded-xl px-3 py-1.5">
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer">Sample Data</Label>
+                <Switch checked={showSample} onCheckedChange={setShowSample} />
+              </div>
               <Button onClick={handleExportReport} disabled={isExporting} variant="outline" size="sm" className="flex items-center gap-2 glass-card rounded-xl border-white/30">
                 {isExporting ? <FiLoader className="h-4 w-4 animate-spin" /> : <FiDownload className="h-4 w-4" />}
                 <span className="hidden md:inline">Export Board Report</span>
